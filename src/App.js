@@ -53,8 +53,7 @@ function App() {
     <div className="App">
       <header className="App-header">
         <form onSubmit={handleSubmit} className="searchBox">
-            <input type="text" value={searchValue} onChange={handleChange} placeholder="Search recipes" className="searchInput"></input>
-          <input type="submit" value="Search" className="searchButton"/>
+          <input type="text" value={searchValue} onChange={handleChange} placeholder="Search recipes" className="searchInput"></input>
         </form>
 
         {error ? 
