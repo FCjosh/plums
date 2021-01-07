@@ -52,12 +52,9 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <form onSubmit={handleSubmit}>
-          <label>
-            Search recipes
-            <input type="text" value={searchValue} onChange={handleChange}></input>
-          </label>
-          <input type="submit" value="Submit" />
+        <form onSubmit={handleSubmit} className="searchBox">
+            <input type="text" value={searchValue} onChange={handleChange} placeholder="Search recipes" className="searchInput"></input>
+          <input type="submit" value="Search" className="searchButton"/>
         </form>
 
         {error ? 
@@ -80,21 +77,25 @@ function App() {
             </div>
           : showing === 'recipe' ?
             <div>
-              {isLoad ? <div>
+            {isLoad ? <div>
+              <p>{recipe.title}</p>
+              <img src={recipe.image} alt={recipe.tite}></img>
+              <p>Ready in {recipe.readyInMinutes} minutes | Makes {recipe.servings} servings</p>
+              <p>Recipe from <a href={recipe.sourceUrl}>{recipe.sourceName}</a></p>
               <ul>
-              {recipe.extendedIngredients.map((item, index) => (
-                <li key={index}>
-                    {item.original}
-                </li>
-              ))}
-            </ul>
-            <ul>
-              {recipe.analyzedInstructions[0].steps.map((item, index) => (
-                <li key={index}>
-                    {item.step}
-                </li>
-              ))}
-            </ul>
+                {recipe.extendedIngredients.map((item, index) => (
+                  <li key={index}>
+                      {item.original}
+                  </li>
+                ))}
+              </ul>
+              <ul>
+                {recipe.analyzedInstructions[0].steps.map((item, index) => (
+                  <li key={index}>
+                      {item.step}
+                  </li>
+                ))}
+              </ul>
             </div> : <div>Loading...</div>}
             </div>
           :
