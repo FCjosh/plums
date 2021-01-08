@@ -20,6 +20,7 @@
   display: grid;
   grid-template-columns: 30% 30% 30%;
   grid-gap: 5px;
+  margin-top: 2vh;
 }
 .itemButton {
   background-color: white;
@@ -47,8 +48,78 @@
   margin: 0px;
   box-shadow: 0px;
   border: none;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
 }
-
 .searchBox {
-  margin-bottom: 2vh;
+  margin-bottom: 0vh;
+}
+.dropbtn {
+  text-align: center;
+  background-color: #61dafb;
+  color: white;
+  padding: 16px;
+  font-size: 16px;
+  border: none;
+  cursor: pointer;
+  border-radius: 2vh;
+  height: 2vh;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+}
+.sortDir {
+  text-align: center;
+  background-color: #61dafb;
+  color: white;
+  padding: 16px;
+  font-size: 16px;
+  border: none;
+  cursor: pointer;
+  border-radius: 2vh;
+  height: 2vh;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  margin-left: 0.5vh;
+}
+.sortDir:hover {
+  background-color: #39a9c9;
+}
+.sortDir p {
+  margin-top: -0.8vh;
+}
+.dropbtn p {
+  margin-top: -0.8vh;
+}
+.dropdown {
+  text-align: center;
+  position: relative;
+  display: inline-block;
+}
+.dropdown-content {
+  text-align: center;
+  display: none;
+  position: absolute;
+  background-color: #61dafb00;
+  color: white;
+  z-index: 1;
+}
+.dropdown-content button {
+  text-align: center;
+  color: white;
+  border: none;
+  border-radius: 2vh;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+  background-color: #61dafb;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+}
+.dropdown:hover .dropdown-content {
+  display: block;
+  text-align: center;
+}
+.dropdown-content button:hover {
+  background-color: #39a9c9;
+  text-align: center;
+}
+.dropdown:hover .dropbtn {
+  text-align: center;
+  background-color: #39a9c9;
 }
