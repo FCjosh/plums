@@ -121,13 +121,11 @@ function App() {
                     </button>
                 ))}
             </div>
-          : showing === 'recipe' ?
-            <div>
-            {isLoad ? <div>
-              <p>{recipe.title}</p>
-              <img src={recipe.image} alt={recipe.tite}></img>
-              <p>Ready in {recipe.readyInMinutes} minutes | Makes {recipe.servings} servings</p>
-              <p>Recipe from <a href={recipe.sourceUrl}>{recipe.sourceName}</a></p>
+          : showing === 'recipe' ?    
+            isLoad ? <div className="recipeDiv">
+              <p className="recipeTitle">{recipe.title}</p>
+              <img src={recipe.image} alt={recipe.tite} className="recipeImg"></img>
+              <p>Ready in <b>{recipe.readyInMinutes}</b> minutes | Makes <b>{recipe.servings}</b> servings | Recipe from <a href={recipe.sourceUrl}>{recipe.sourceName}</a></p>
               <ul>
                 {recipe.extendedIngredients.map((item, index) => (
                   <li key={index}>
@@ -135,15 +133,14 @@ function App() {
                   </li>
                 ))}
               </ul>
-              <ul>
+              <ol>
                 {recipe.analyzedInstructions[0].steps.map((item, index) => (
                   <li key={index}>
                       {item.step}
                   </li>
                 ))}
-              </ul>
-            </div> : <div>Loading...</div>}
-            </div>
+              </ol>
+            </div> : <div>Loading...</div>
           :
             <div></div>
         }
