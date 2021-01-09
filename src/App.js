@@ -12,6 +12,22 @@ function App() {
   const [sort, setSort] = useState("meta-score");
   const [sortDirection, setSortDirection] = useState('asc');
 
+  const searchAPI = () => {
+    fetch(`https://api.spoonacular.com/recipes/complexSearch?query=${searchValue}&number=10&sort=${sort}&sortDirection=${sortDirection}&apiKey=cacaef5c287c4b159cf6aeb1dc609470`)
+    .then(res => res.json())
+    .then(
+      (result) => {
+        setIsLoaded(true);
+        const searchList = result.results;
+        setItems(searchList);
+      },
+      (error) => {
+        setIsLoaded(true);
+        setError(error);
+      }
+    )
+  }
+
   const handleItem = (id) => {
     setShowing('recipe');
     fetch(`https://api.spoonacular.com/recipes/${id}/information?includeNutrition=false&apiKey=cacaef5c287c4b159cf6aeb1dc609470`)
@@ -36,94 +52,56 @@ function App() {
   const handleSubmit = (event) => {
     event.preventDefault();
     setShowing('search');
-    fetch(`https://api.spoonacular.com/recipes/complexSearch?query=${searchValue}&number=10&sort=${sort}&sortDirection=${sortDirection}&apiKey=cacaef5c287c4b159cf6aeb1dc609470`)
-    .then(res => res.json())
-    .then(
-      (result) => {
-        setIsLoaded(true);
-        const searchList = result.results;
-        setItems(searchList);
-      },
-      (error) => {
-        setIsLoaded(true);
-        setError(error);
-      }
-    )
+    searchAPI();
   }
   const handleSort = () => {
     if(showing === "search"){
-      fetch(`https://api.spoonacular.com/recipes/complexSearch?query=${searchValue}&number=10&sort=${sort}&sortDirection=${sortDirection}&apiKey=cacaef5c287c4b159cf6aeb1dc609470`)
-      .then(res => res.json())
-      .then(
-        (result) => {
-          setIsLoaded(true);
-          const searchList = result.results;
-          setItems(searchList);
-        },
-        (error) => {
-          setIsLoaded(true);
-          setError(error);
-        }
-      )
+      searchAPI();
     }
   }
+
+  const sortTypes = [
+    'meta-score',
+    'popularity',
+    'healthiness',
+    'price',
+    'time',
+    'random',
+    'calories',
+    'carbohydrates',
+    'carbs',
+  ]
 
   return (
     <div className="App">
       <header className="App-header">
-        <form onSubmit={handleSubmit} className="searchBox">
-          <input type="text" value={searchValue} onChange={handleChange} placeholder="Search recipes" className="searchInput"></input>
-        </form>
-        <div className="searchOptions">
+        <div className="topDiv">
+          <form onSubmit={handleSubmit} className="searchBox">
+            <input type="text" value={searchValue} onChange={handleChange} placeholder="Search recipes" className="searchInput"></input>
+          </form>
           <div className="dropdown">
-            <button className="dropbtn"><p>Sort: {sort}</p></button>
-            <div className="dropdown-content">
-              <button onClick={() => {
-                setSort("meta-score");
-                handleSort();
-                }} className="dropdown-item">meta-score</button>
-              <button onClick={() => {
-                setSort("popularity");
-                handleSort();
-                }} className="dropdown-item">popularity</button>
-              <button onClick={() => {
-                setSort("healthiness");
-                handleSort();
-                }} className="dropdown-item">healthiness</button>
-              <button onClick={() => {
-                setSort("price");
-                handleSort();
-                }} className="dropdown-item">price</button>
-              <button onClick={() => {
-                setSort("time");
-                handleSort();
-                }} className="dropdown-item">time</button>
-              <button onClick={() => {
-                setSort("random");
-                handleSort();
-                }} className="dropdown-item">random</button>
-              <button onClick={() => {
-                setSort("calories");
-                handleSort();
-                }} className="dropdown-item">calories</button>
-              <button onClick={() => {
-                setSort("carbohydrates");
-                handleSort();
-                }} className="dropdown-item">carbohydrates</button>
-              <button onClick={() => {
-                setSort("carbs");
-                handleSort();
-                }} className="dropdown-item">carbs</button>
+            <div className="optionsDiv">
+              <div className="searchOptions">
+                <button className="dropbtn"><p>Sort: {sort}</p></button>
+                <button className="sortDir" onClick={() => {
+                  if(sortDirection === "asc"){
+                    setSortDirection("desc");
+                  }else{
+                    setSortDirection("asc");
+                  }
+                  handleSort();
+                }} >{sortDirection === "asc" ? <p>&#9650;</p> : <p>&#9660;</p>}</button>
+              </div>
             </div>
+            <div className="dropdown-content">
+                {sortTypes.map(item => (
+                  <button onClick={() => {
+                    setSort(item);
+                    handleSort();
+                  }} className="dropdown-item" key={item}>{item}</button>
+                ))}
+              </div>
           </div>
-          <button className="sortDir" onClick={() => {
-            if(sortDirection === "asc"){
-              setSortDirection("desc");
-            }else{
-              setSortDirection("asc");
-            }
-            handleSort();
-          }} >{sortDirection === "asc" ? <p>&#9650;</p> : <p>&#9660;</p>}</button>
         </div>
         {error ? 
           <div>Error: {error.message}</div>
