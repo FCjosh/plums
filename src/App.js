@@ -1,5 +1,8 @@
 import React, {useState} from 'react';
+import initReactFastclick from 'react-fastclick';
 import './App.css';
+
+initReactFastclick();
 
 function App() {
   const [searchValue, setSearchValue] = useState('');
@@ -11,6 +14,7 @@ function App() {
   const [recipe, setRecipe] = useState({});
   const [sort, setSort] = useState("meta-score");
   const [sortDirection, setSortDirection] = useState('asc');
+  const [showSort, setShowSort] = useState(false);
 
   const searchAPI = () => {
     fetch(`https://api.spoonacular.com/recipes/complexSearch?query=${searchValue}&number=10&sort=${sort}&sortDirection=${sortDirection}&apiKey=cacaef5c287c4b159cf6aeb1dc609470`)
@@ -82,7 +86,13 @@ function App() {
           <div className="dropdown">
             <div className="optionsDiv">
               <div className="searchOptions">
-                <button className="dropbtn"><p>Sort: {sort}</p></button>
+                <button className={ showSort ? "dropbtnd" : "dropbtn"} onClick={() => {
+                  if(showSort){
+                    setShowSort(false);
+                  } else {
+                    setShowSort(true);
+                  }
+                }}><p>Sort: {sort}</p></button>
                 <button className="sortDir" onClick={() => {
                   if(sortDirection === "asc"){
                     setSortDirection("desc");
@@ -93,14 +103,18 @@ function App() {
                 }} >{sortDirection === "asc" ? <p>&#9650;</p> : <p>&#9660;</p>}</button>
               </div>
             </div>
-            <div className="dropdown-content">
+            { showSort ?
+              <div className="dropdown-content">
                 {sortTypes.map(item => (
                   <button onClick={() => {
                     setSort(item);
                     handleSort();
+                    setShowSort(false);
                   }} className="dropdown-item" key={item}>{item}</button>
                 ))}
               </div>
+              : <div></div>
+            }
           </div>
         </div>
         {error ? 
