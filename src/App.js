@@ -86,47 +86,49 @@ function App() {
 
   return (
     <div className="App">
-      <header className="App-header">
-        <div className="topDiv">
-          <form onSubmit={handleSubmit} className="searchBox">
-            <input type="text" value={searchValue} onChange={handleChange} placeholder="Search recipes" className="searchInput"></input>
-          </form>
-          <div className="dropdown">
-            <div className="optionsDiv">
-              <div className="searchOptions">
-                <button className={ showSort ? "dropbtnd" : "dropbtn"} onClick={() => {
-                  if(showSort){
-                    setShowSort(false);
-                  } else {
-                    setShowSort(true);
-                  }
-                }}><p>Sort: {sort}</p></button>
-                <button className="sortDir" onClick={() => {
-                  let sortDirectionp = "asc";
-                  if(sortDirection === "asc"){
-                    setSortDirection("desc");
-                    sortDirectionp ="desc";
-                  }else{
-                    setSortDirection("asc");
-                  }
-                  handleSort("",sortDirectionp);
-                }} >{sortDirection === "asc" ? <p>&#9650;</p> : <p>&#9660;</p>}</button>
+      <div className="flexApp">
+        <header className="App-header">
+          <div className="topDiv">
+            <form onSubmit={handleSubmit} className="searchBox">
+              <input type="text" value={searchValue} onChange={handleChange} placeholder="Search recipes" className="searchInput"></input>
+            </form>
+            <div className="dropdown">
+              <div className="optionsDiv">
+                <div className="searchOptions">
+                  <button className={ showSort ? "dropbtnd" : "dropbtn"} onClick={() => {
+                    if(showSort){
+                      setShowSort(false);
+                    } else {
+                      setShowSort(true);
+                    }
+                  }}><p>Sort: {sort}</p></button>
+                  <button className="sortDir" onClick={() => {
+                    let sortDirectionp = "asc";
+                    if(sortDirection === "asc"){
+                      setSortDirection("desc");
+                      sortDirectionp ="desc";
+                    }else{
+                      setSortDirection("asc");
+                    }
+                    handleSort("",sortDirectionp);
+                  }} >{sortDirection === "asc" ? <p>&#9650;</p> : <p>&#9660;</p>}</button>
+                </div>
               </div>
+              { showSort ?
+                <div className="dropdown-content">
+                  {sortTypes.map(item => (
+                    <button onClick={() => {
+                      setSort(item);
+                      handleSort(item, "");
+                      setShowSort(false);
+                    }} className="dropdown-item" key={item}>{item}</button>
+                  ))}
+                </div>
+                : <div></div>
+              }
             </div>
-            { showSort ?
-              <div className="dropdown-content">
-                {sortTypes.map(item => (
-                  <button onClick={() => {
-                    setSort(item);
-                    handleSort(item, "");
-                    setShowSort(false);
-                  }} className="dropdown-item" key={item}>{item}</button>
-                ))}
-              </div>
-              : <div></div>
-            }
           </div>
-        </div>
+        </header>
         {error ? 
           <div>Error: {error.message}</div>
         : showing === 'home' ?
@@ -168,7 +170,7 @@ function App() {
           :
             <div></div>
         }
-      </header>
+      </div>
     </div>
   );
 }

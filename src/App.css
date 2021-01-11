@@ -1,15 +1,26 @@
-.App-header {
+.App {
   background-color: #000000;
-  min-height: 100vh;
+  height: 100%;
+}
+.flexApp{
+  background-color: #000000;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
   font-size: calc(10px + 2vmin);
   color: white;
+  height: 100%;
 }
-.App{
-  background-color: #282c3400;
+.App-header {
+  background-color: #232323;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  font-size: calc(10px + 2vmin);
+  color: white;
+  width: 100%;
 }
 .topDiv {
   display: flex;
