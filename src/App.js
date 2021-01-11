@@ -16,8 +16,16 @@ function App() {
   const [sortDirection, setSortDirection] = useState('asc');
   const [showSort, setShowSort] = useState(false);
 
-  const searchAPI = () => {
-    fetch(`https://api.spoonacular.com/recipes/complexSearch?query=${searchValue}&number=10&sort=${sort}&sortDirection=${sortDirection}&apiKey=cacaef5c287c4b159cf6aeb1dc609470`)
+  const searchAPI = (sortp, sortDirectionp) => {
+    let newsort = sort;
+    if(sortp){
+      newsort = sortp;
+    }
+    let newsortDirection = sortDirection;
+    if(sortDirectionp){
+      newsortDirection = sortDirectionp;
+    }
+    fetch(`https://api.spoonacular.com/recipes/complexSearch?query=${searchValue}&number=10&sort=${newsort}&sortDirection=${newsortDirection}&apiKey=cacaef5c287c4b159cf6aeb1dc609470`)
     .then(res => res.json())
     .then(
       (result) => {
@@ -58,9 +66,9 @@ function App() {
     setShowing('search');
     searchAPI();
   }
-  const handleSort = () => {
+  const handleSort = (sortp, sortDirectionp) => {
     if(showing === "search"){
-      searchAPI();
+      searchAPI(sortp, sortDirectionp);
     }
   }
 
@@ -94,12 +102,14 @@ function App() {
                   }
                 }}><p>Sort: {sort}</p></button>
                 <button className="sortDir" onClick={() => {
+                  let sortDirectionp = "asc";
                   if(sortDirection === "asc"){
                     setSortDirection("desc");
+                    sortDirectionp ="desc";
                   }else{
                     setSortDirection("asc");
                   }
-                  handleSort();
+                  handleSort("",sortDirectionp);
                 }} >{sortDirection === "asc" ? <p>&#9650;</p> : <p>&#9660;</p>}</button>
               </div>
             </div>
@@ -108,7 +118,7 @@ function App() {
                 {sortTypes.map(item => (
                   <button onClick={() => {
                     setSort(item);
-                    handleSort();
+                    handleSort(item, "");
                     setShowSort(false);
                   }} className="dropdown-item" key={item}>{item}</button>
                 ))}
