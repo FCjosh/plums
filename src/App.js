@@ -110,7 +110,17 @@ function App() {
         <header className="App-header">
           <div className="topDiv">
             <form onSubmit={handleSubmit} className="searchBox">
+              {showing === 'recipe' ?
+                <button className="backButton" onClick={() => {
+                  setShowing('search');
+                }}><p>&#8592;</p></button>
+              : <div></div>
+              }
               <input value={searchValue} onChange={handleChange} placeholder="Search recipes" className="searchInput" type="search"></input>
+              {showing === 'recipe' ?
+                <div className="invRight"></div>
+              : <div></div>
+              }
             </form>
             <div className="dropdown">
               <div className="optionsDiv">

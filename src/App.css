@@ -39,6 +39,27 @@
   height: 60px;
   padding-bottom: 10px;
 }
+.backButton {
+  background-color: transparent;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  font-size: 25px;
+  font-weight: bold;
+  border: none;
+  height: 40px;
+  width: 40px;
+  margin-bottom: 0px;
+  margin-right: auto;
+}
+.invRight {
+  display: flex;
+  height: 40px;
+  width: 40px;
+  margin-bottom: 0px;
+  margin-left: auto;
+}
 /* clears the ‘X’ from Internet Explorer */
 input[type=search]::-ms-clear { display: none; width : 0; height: 0; }
 input[type=search]::-ms-reveal { display: none; width : 0; height: 0; }
@@ -53,7 +74,7 @@ input[type="search"]::-webkit-search-results-decoration { display: none; }
   display: flex;
   text-align: center;
   height: 40px;
-  width: 300px;
+  max-width: 300px;
   font-size: 30px;
   border-radius: 30px;
   border: none;
