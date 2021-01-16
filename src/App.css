@@ -49,6 +49,10 @@
   font-size: 30px;
   border-radius: 30px;
   border: none;
+  outline: none;
+}
+.searchInput:focus {
+  box-shadow: 0 0 0 2pt #BB86FC;
 }
 .optionsDiv {
   display: flex;
@@ -108,8 +112,7 @@ button {
   flex-wrap: wrap;
   justify-content: center;
   width: 100%;
-  top: 115px;
-  left: 0px;
+  
   height: auto;
 }
 .dropdown-content button {
