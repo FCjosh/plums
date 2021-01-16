@@ -110,7 +110,7 @@ function App() {
         <header className="App-header">
           <div className="topDiv">
             <form onSubmit={handleSubmit} className="searchBox">
-              <input type="text" value={searchValue} onChange={handleChange} placeholder="Search recipes" className="searchInput"></input>
+              <input value={searchValue} onChange={handleChange} placeholder="Search recipes" className="searchInput" type="search"></input>
             </form>
             <div className="dropdown">
               <div className="optionsDiv">
