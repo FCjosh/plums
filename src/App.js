@@ -1,10 +1,7 @@
 import React, {useState} from 'react';
-import initReactFastclick from 'react-fastclick';
 import { InfiniteLoader, List } from 'react-virtualized';
 import 'react-virtualized/styles.css';
 import './App.css';
-
-initReactFastclick();
 
 const searchSelection = {
   'Sort Direction': 'asc',
@@ -58,7 +55,7 @@ function App() {
     if(offset){
       newoffset = offset;
     }
-    fetch(`https://api.spoonacular.com/recipes/complexSearch?query=${searchValue}&number=${20*columns}&offset=${newoffset}&sort=${searchSelection.Sort}&sortDirection=${searchSelection['Sort Direction']}&cuisine=${searchSelection.Cuisine}&diet=${searchSelection.Diet}&intolerances=${searchSelection.Intolerance}&type=${searchSelection.['Meal Types']}&apiKey=cacaef5c287c4b159cf6aeb1dc609470`)
+    fetch(`https://api.spoonacular.com/recipes/complexSearch?query=${searchValue}&number=${20*columns}&offset=${newoffset}&sort=${searchSelection.Sort}&sortDirection=${searchSelection['Sort Direction']}&cuisine=${searchSelection.Cuisine}&diet=${searchSelection.Diet}&intolerances=${searchSelection.Intolerance}&type=${searchSelection['Meal Types']}&apiKey=cacaef5c287c4b159cf6aeb1dc609470`)
     .then(res => res.json())
     .then(
       (result) => {
@@ -189,7 +186,7 @@ function App() {
               {showing === 'recipe' ?
                 <button className="backButton" onClick={() => {
                   setShowing('search');
-                }}><p>&#xe019;</p></button>
+                }}><p>&#8592;</p></button>
               : <div></div>
               }
               <input value={searchValue} onChange={handleChange} placeholder="Search recipes" className="searchInput" type="search"></input>
