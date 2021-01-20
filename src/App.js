@@ -1,5 +1,7 @@
 import React, {useState} from 'react';
 import initReactFastclick from 'react-fastclick';
+import { InfiniteLoader, List } from 'react-virtualized';
+import 'react-virtualized/styles.css';
 import './App.css';
 
 initReactFastclick();
@@ -17,12 +19,16 @@ function App() {
   const [searchValue, setSearchValue] = useState('');
   const [error, setError] = useState(null);
   const [isLoaded, setIsLoaded] = useState(false);
-  const [items, setItems] = useState([]);
+  const [list, setList] = useState([]);
+  const [longList, setLongList] = useState([]);
   const [showing, setShowing] = useState('home');
   const [isLoad, setIsLoad] = useState(false);
   const [recipe, setRecipe] = useState({});
   const [showSort, setShowSort] = useState(false);
+  const [showSettings, setShowSettings] = useState(false);
   const [showFilter, setShowFilter] = useState(false);
+  const [columnWidth, setColumnWidth] = useState(300);
+  const [columns, setColumns] = useState(Math.floor(window.innerWidth/300));
   const [showFilterOption, setShowFilterOption] = useState('none');
   const [searchSelectionState, setSearchSelectionState] = useState({
     'Sort Direction': 'asc',
@@ -33,14 +39,39 @@ function App() {
     'Meal Types': [],
   });
 
-  const searchAPI = () => {
-    fetch(`https://api.spoonacular.com/recipes/complexSearch?query=${searchValue}&number=9&sort=${searchSelection.Sort}&sortDirection=${searchSelection['Sort Direction']}&cuisine=${searchSelection.Cuisine}&diet=${searchSelection.Diet}&intolerances=${searchSelection.Intolerance}&type=${searchSelection.['Meal Types']}&apiKey=cacaef5c287c4b159cf6aeb1dc609470`)
+  function chunk (arr, len) {
+    // console.log('arr' + JSON.stringify(arr));
+    var chunks = [],
+        i = 0,
+        n = arr.length;
+    while (i < n) {
+      chunks.push(arr.slice(i, i + len));
+      i = i + len;
+      // console.log('indivisual arr ' + JSON.stringify(arr));
+    }
+    // console.log('chunks' + JSON.stringify(chunks));
+    return chunks;
+  }
+
+  const searchAPI = (offset) => {
+    let newoffset = 0;
+    if(offset){
+      newoffset = offset;
+    }
+    fetch(`https://api.spoonacular.com/recipes/complexSearch?query=${searchValue}&number=${20*columns}&offset=${newoffset}&sort=${searchSelection.Sort}&sortDirection=${searchSelection['Sort Direction']}&cuisine=${searchSelection.Cuisine}&diet=${searchSelection.Diet}&intolerances=${searchSelection.Intolerance}&type=${searchSelection.['Meal Types']}&apiKey=cacaef5c287c4b159cf6aeb1dc609470`)
     .then(res => res.json())
     .then(
       (result) => {
         setIsLoaded(true);
         const searchList = result.results;
-        setItems(searchList);
+        setLongList(searchList);
+        var cloneSearch = [...searchList];
+        const newSearchList = chunk(cloneSearch, columns);
+        if(newoffset === 0){
+          setList(newSearchList);
+        } else {
+          setList(list.concat(newSearchList));
+        }
       },
       (error) => {
         setIsLoaded(true);
@@ -69,11 +100,19 @@ function App() {
   const handleChange = (event) => {
     setSearchValue(event.target.value);
   }
-
   const handleSubmit = (event) => {
     event.preventDefault();
     setShowing('search');
     searchAPI();
+  }
+  const handleColumnSubmit = (event) => {
+    event.preventDefault();
+    var cloneList = [...longList];
+    const newList = chunk(cloneList, columns);
+    setList(newList);
+  }
+  const handleColumnChange = (event) => {
+    setColumns(parseInt(event.target.value, 10));
   }
   const handleSearchOptions = () => {
     if(showing === "search"){
@@ -102,7 +141,44 @@ function App() {
         'salad', 'bread', 'breakfast', 'soup', 'beverage', 'sauce', 'marinade', 'fingerfood', 'snack', 'drink',
       ],
     },
-  }
+  };
+
+  const loadMoreRows = ({startIndex, stopIndex}) => {
+    console.log(startIndex + 'startIndex');
+    console.log(stopIndex + 'stopIndex');
+    searchAPI(startIndex);
+  };
+
+  const isRowLoaded = ({index}) => {
+    return !!list[index];
+  };
+
+  const rowRenderer = ({index, key, style}) => {
+    let items;
+
+    if (!isRowLoaded({index})) {
+      items = 'Loading...';
+    } else {
+      items = list[index];
+    }
+
+    return (
+      <div key={key} style={style}>
+        {items === 'Loading...' ? <p>{items}</p> :
+          <div className="searchItemRow">
+            {items.map(item => (
+              <button onClick={() => handleItem(item.id)} className="itemButton" key={item.id} style={{width: columnWidth}}>
+                <div className="itemTitle">
+                  {item.title}
+                </div>
+                <img src={item.image} alt={item.title} className="itemImage"></img>
+              </button>
+            ))}
+          </div>
+        }
+      </div>
+    );
+  };
 
   return (
     <div className="App">
@@ -113,7 +189,7 @@ function App() {
               {showing === 'recipe' ?
                 <button className="backButton" onClick={() => {
                   setShowing('search');
-                }}><p>&#8592;</p></button>
+                }}><p>&#xe019;</p></button>
               : <div></div>
               }
               <input value={searchValue} onChange={handleChange} placeholder="Search recipes" className="searchInput" type="search"></input>
@@ -125,6 +201,22 @@ function App() {
             <div className="dropdown">
               <div className="optionsDiv">
                 <div className="searchOptions">
+                  <button className={ showSettings ? "dropbtnd" : "dropbtn"} onClick={() => {
+                    if(showSettings){
+                      setShowSettings(false);
+                    } else {
+                      setShowSettings(true);
+                    }
+                    if(showSort){
+                      setShowSort(false);
+                    }
+                    if(showFilter){
+                      setShowFilter(false);
+                    }
+                    if(showFilterOption !== 'none'){
+                      setShowFilterOption('none');
+                    }
+                  }}><p>&#9881;</p></button>
                   <button className={ showSort ? "dropbtnd" : "dropbtn"} onClick={() => {
                     if(showSort){
                       setShowSort(false);
@@ -136,6 +228,9 @@ function App() {
                     }
                     if(showFilterOption !== 'none'){
                       setShowFilterOption('none');
+                    }
+                    if(showSettings){
+                      setShowSettings(false);
                     }
                   }}><p>Sort: {searchSelectionState.Sort}</p></button>
                   <button className="sortDir" onClick={() => {
@@ -160,9 +255,20 @@ function App() {
                     if(showSort){
                       setShowSort(false);
                     }
+                    if(showSettings){
+                      setShowSettings(false);
+                    }
                   }}><p>Filter</p></button>
                 </div>
               </div>
+              { showSettings ?
+                <div className="dropdown-content">
+                    <form onSubmit={handleColumnSubmit} className="dropdown-setting">
+                      <p>Columns (1-6)</p><input id="columns" type="number" value={columns} min="1" max="6" onChange={handleColumnChange}></input>
+                    </form>
+                </div>
+                : <div></div>
+              }
               { showSort ?
                 <div className="dropdown-content">
                   {searchData['Sort'].map(item => (
@@ -217,16 +323,34 @@ function App() {
           !isLoaded ?
             <div>Loading...</div>
           :
-            <div className="grid-wrapper">
-                {items.map(item => (
-                    <button onClick={() => handleItem(item.id)} className="itemButton" key={item.id}>
-                      <div className="itemTitle">
-                        {item.title}
-                      </div>
-                      <img src={item.image} alt={item.title} className="itemImage"></img>
-                    </button>
-                ))}
-            </div>
+            // <div className="grid-wrapper">
+            //     {items.map(item => (
+            //         <button onClick={() => handleItem(item.id)} className="itemButton" key={item.id}>
+            //           <div className="itemTitle">
+            //             {item.title}
+            //           </div>
+            //           <img src={item.image} alt={item.title} className="itemImage"></img>
+            //         </button>
+            //     ))}
+            // </div>
+            <InfiniteLoader
+              isRowLoaded={isRowLoaded}
+              loadMoreRows={loadMoreRows}
+              rowCount={list.length + 1}
+              minimumBatchSize={20*columns}
+              threshold={2}>
+              {({onRowsRendered, registerChild}) => (
+                <List
+                  ref={registerChild}
+                  onRowsRendered={onRowsRendered}
+                  rowRenderer={rowRenderer}
+                  height={975}
+                  rowHeight={270}
+                  width={window.innerWidth}
+                  rowCount={list.length + 1}
+                />
+              )}
+            </InfiniteLoader>
           : showing === 'recipe' ?    
             isLoad ? <div className="recipeDiv">
               <p className="recipeTitle">{recipe.title}</p>
