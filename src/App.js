@@ -11,6 +11,7 @@ const searchSelection = {
   'Diet': [],
   'Meal Types': [],
 }
+const columnWidth = 300;
 
 function App() {
   const [searchValue, setSearchValue] = useState('');
@@ -24,7 +25,7 @@ function App() {
   const [showSort, setShowSort] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const [showFilter, setShowFilter] = useState(false);
-  const [columnWidth, setColumnWidth] = useState(300);
+  // const [columnWidth, setColumnWidth] = useState(300);
   const [columns, setColumns] = useState(Math.floor(window.innerWidth/300));
   const [showFilterOption, setShowFilterOption] = useState('none');
   const [searchSelectionState, setSearchSelectionState] = useState({
