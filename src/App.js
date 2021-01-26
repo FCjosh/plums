@@ -342,8 +342,8 @@ function App() {
                   ref={registerChild}
                   onRowsRendered={onRowsRendered}
                   rowRenderer={rowRenderer}
-                  height={975}
-                  rowHeight={270}
+                  height={window.innerHeight-120}
+                  rowHeight={Math.floor(0.9*300)}
                   width={window.innerWidth}
                   rowCount={list.length + 1}
                 />
